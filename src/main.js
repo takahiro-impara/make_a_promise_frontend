@@ -5,6 +5,7 @@ import router from './router'
 import axios from 'axios'
 import { domain, clientId, audience } from "../auth_config.json";
 import { Auth0Plugin } from "./auth";
+import vuetify from './plugins/vuetify'
 
 Vue.use(Auth0Plugin, {
   domain,
@@ -23,5 +24,6 @@ Vue.config.productionTip = false
 
 new Vue({
   router,
+  vuetify,
   render: h => h(App)
 }).$mount('#app')

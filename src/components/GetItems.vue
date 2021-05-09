@@ -1,12 +1,31 @@
 <template>
-  <div class="GetItems">
-    <ul class="GetItems">
-      <li v-for="item in items" :key="item.name">
-        {{ item }}
-      </li>
-    </ul>
-  </div>
-
+  <v-card
+    class="mx-auto GetItems"
+    max-width="400"
+    title
+    v-if="items.length"
+  >
+    <v-list-item two-line v-for="item in items" :key="item.dueDa">
+      <v-list-item-content >
+        <v-list-item-title>{{ item.name }}</v-list-item-title>
+        <v-list-item-subtitle>Date: {{ item.dueDate }}</v-list-item-subtitle>
+        <v-container>
+          <v-row>
+            <v-spacer></v-spacer>
+            <v-spacer></v-spacer>
+            <v-list-item-icon>
+              <v-icon 
+                >fas fa-edit</v-icon>
+              <v-icon
+                @click.prevent="deleteItem(item.itemId)"
+              >fas fa-trash-alt</v-icon>
+            </v-list-item-icon>
+          </v-row>
+        </v-container>
+        <v-divider></v-divider>
+      </v-list-item-content>
+    </v-list-item>
+  </v-card>
 </template>
 
 <script>
@@ -16,11 +35,11 @@ import { apiBaseUrl, stage} from '../config.json'
 
 const url = apiBaseUrl + `/${stage}/items`
 export default {
-  name: 'callApi',
+  name: 'GetItems',
   data () {
     return {
       items: null,
-      token: ''
+      token: '',
     }
   },
   async mounted() {
@@ -34,6 +53,18 @@ export default {
     });
     console.log(this.token)
     this.items = data.items;
+  },
+  methods:{
+    async deleteItem(itemId){
+      const deleteurl = apiBaseUrl + `/${stage}/item/` + itemId
+
+      await axios.delete(deleteurl, {
+        headers: {
+          Authorization: `Bearer ${this.token}`    // send the access token through the 'Authorization' header
+        } 
+      })
+      location.reload();
+    }
   }
 }
 </script>
