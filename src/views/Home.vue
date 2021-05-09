@@ -1,7 +1,5 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-
     <!-- Check that the SDK client is not currently loading before accessing is methods -->
     <div v-if="!$auth.loading">
       <!-- show login when not authenticated -->
@@ -9,15 +7,20 @@
       <!-- show logout when authenticated -->
       <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
     </div>
+    <div v-if="!$auth.loading">
+      <get-items/>
+    </div>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
+import GetItems from "../components/GetItems.vue"
 
 export default {
   name: 'Home',
   components: {
+    GetItems
   },
   methods: {
     // Log the user in
