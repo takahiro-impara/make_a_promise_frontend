@@ -5,9 +5,14 @@
     title
     v-if="items.length"
   >
-    <v-list-item two-line v-for="item in items" :key="item.dueDa">
+    <v-list-item two-line v-for="item in items" :key="item.itemId">
       <v-list-item-content >
-        <v-list-item-title>{{ item.name }}</v-list-item-title>
+        <v-list-item-title>
+          <input v-if="item.done" type="checkbox" checked="checked" @click="updateItem(item.itemId, false)">
+          <input v-else type="checkbox" @click="updateItem(item.itemId, true)">
+          {{ item.name }}
+          
+          </v-list-item-title>
         <v-list-item-subtitle>Date: {{ item.dueDate }}</v-list-item-subtitle>
         <v-container>
           <v-row>
@@ -40,9 +45,11 @@ export default {
     return {
       items: null,
       token: '',
+      resetKey: 0
     }
   },
   async mounted() {
+    this.resetKey = 0;
     // Get the access token from the auth wrapper
     this.token = await this.$auth.getTokenSilently();
     // Use Axios to make a call to the API
@@ -53,6 +60,7 @@ export default {
     });
     console.log(this.token)
     this.items = data.items;
+    this.items.sort();
   },
   methods:{
     async deleteItem(itemId){
@@ -63,7 +71,18 @@ export default {
           Authorization: `Bearer ${this.token}`    // send the access token through the 'Authorization' header
         } 
       })
+      //this.items.pop();
       location.reload();
+    },
+    async updateItem(itemId, done){
+      const updateurl = apiBaseUrl + `/${stage}/item/` + itemId
+      await axios.patch(updateurl, {
+        done: done
+      },{
+        headers: {
+          Authorization: `Bearer ${this.token}`    // send the access token through the 'Authorization' header
+        },
+      });
     }
   }
 }

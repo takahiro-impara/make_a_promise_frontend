@@ -29,6 +29,7 @@
 
       <v-btn
         class="mr-4"
+        color="success"
         @click="createItem"
       >
         Create
