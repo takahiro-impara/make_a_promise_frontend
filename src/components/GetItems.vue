@@ -16,11 +16,15 @@
         <v-list-item-subtitle>Date: {{ item.dueDate }}</v-list-item-subtitle>
         <v-container>
           <v-row>
+            <ImageLoad v-if="item.attachmentUrl" v-bind:attachmentUrl=item.attachmentUrl></ImageLoad>
             <v-spacer></v-spacer>
             <v-spacer></v-spacer>
             <v-list-item-icon>
-              <v-icon 
+              <router-link style="text-decoration: none; color: inherit;"
+                :to="{name: 'ImageUpload', params: {itemId: item.itemId}}">
+                <v-icon
                 >fas fa-edit</v-icon>
+              </router-link>
               <v-icon
                 @click.prevent="deleteItem(item.itemId)"
               >fas fa-trash-alt</v-icon>
@@ -37,19 +41,21 @@
 // @ is an alias to /src
 import axios from 'axios'
 import { apiBaseUrl, stage} from '../config.json'
-
 const url = apiBaseUrl + `/${stage}/items`
+import ImageLoad from './ImageLoad.vue'
 export default {
   name: 'GetItems',
+  components: {
+    ImageLoad
+  },
   data () {
     return {
       items: null,
       token: '',
-      resetKey: 0
+      targetImage: ''
     }
   },
   async mounted() {
-    this.resetKey = 0;
     // Get the access token from the auth wrapper
     this.token = await this.$auth.getTokenSilently();
     // Use Axios to make a call to the API
@@ -83,7 +89,18 @@ export default {
           Authorization: `Bearer ${this.token}`    // send the access token through the 'Authorization' header
         },
       });
+    },
+    async encodeImg(base64Url){
+      this.targetImage = ''
+      const res = await this.getImageData(base64Url)
+      this.targetImage = res.data.data.toString()
+      console.log(this.targetImage)
+    },
+    getImageData(base64url){
+      return axios.get(base64url)
     }
+  },
+  computed: {
   }
 }
 </script>

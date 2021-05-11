@@ -4,7 +4,7 @@ import { authGuard } from '../auth/authGuard'
 import Home from '../views/Home.vue'
 
 import CreateItem from "../views/CreateItem.vue";
-import Profile from "../views/Profile.vue";
+import ImageUpload from "../views/ImageUpload.vue";
 
 Vue.use(VueRouter)
 
@@ -21,10 +21,19 @@ const routes = [
     beforeEnter: authGuard
 
   },
+  /*
   {
     path: "/profile",
     name: "profile",
     component: Profile,
+    beforeEnter: authGuard
+  },
+  */
+  {
+    path: "/:itemId/attachement",
+    name: "ImageUpload",
+    component: ImageUpload,
+    props: true,
     beforeEnter: authGuard
   }
 ]
