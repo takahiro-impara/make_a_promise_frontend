@@ -1,33 +1,44 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link v-if="$auth.isAuthenticated" to="/profile">Profile</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-app-bar
+      app
+      color="primary"
+      dark
+    >
+      <div class="d-flex align-center">
+        <v-icon @click="home">fas fa-home</v-icon>
+      </div>
+
+      <v-spacer></v-spacer>
+      <LogoutButton v-if="$auth.isAuthenticated" />
+      <LoginButton v-else />
+
+    </v-app-bar>
+
+    <v-main>
+      <router-view/>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import LoginButton from "./components/LoginButton"
+import LogoutButton from "./components/LogoutButton"
 
-#nav {
-  padding: 30px;
-}
+export default {
+  name: 'App',
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+  data: () => ({
+    //
+  }),
+  components: {
+    LoginButton,
+    LogoutButton,
+  },
+  methods: {
+    home() {
+      location.href="/";
+    }
+  }
+};
+</script>
